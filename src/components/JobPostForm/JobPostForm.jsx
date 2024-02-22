@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./JobPostForm.module.css";
 import { createJobPost } from "../../apis/job";
 function JobPostForm() {
-  const [isEditExistingJobPost, setIsEditExistingJobPost] = useState(false);
+  const { state } = useLocation();
+  console.log(state);
+  const [isEditExistingJobPost] = useState(false || state.edit);
   const [formData, setFormData] = useState({
     companyName: "",
     logoUrl: "",
@@ -28,7 +31,7 @@ function JobPostForm() {
   return (
     <div className={styles.container}>
       <h1 className={styles.h1}>
-        {/*{isEditExistingJobPost ? <>Edit</> : <>Add</>}*/} job description
+        {isEditExistingJobPost ? <>Edit</> : <>Add</>} Job Description
       </h1>
       <div className={styles.jobForm}>
         <div className={styles.formGroup}>

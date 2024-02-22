@@ -14,11 +14,11 @@ export const getAllJobs = ({ skills, title }) => {
   }
 };
 
-export const getJobDetails = (jobId) => {
+export const getJobDetails = async (jobId) => {
   try {
     const reqUrl = `${backendUrl}/job-description/${jobId}`; //add the url of your api here.
-    const response = axios.get(reqUrl);
-    console.log(response);
+    const response = await axios.get(reqUrl);
+    return response.data?.data;
   } catch (error) {
     console.log(error);
     // toast with custom message
