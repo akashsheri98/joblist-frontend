@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styles from "./JobPostForm.module.css";
-import { createJobPost } from "../../apis/job";
+import { createJobPost , updateJobPost } from "../../apis/job";
+import toast, { Toaster } from "react-hot-toast";
 function JobPostForm() {
   const { state } = useLocation();
   console.log(state);
-  const [isEditExistingJobPost] = useState(false || state.edit);
+  const [isEditExistingJobPost] = useState(false || state?.edit);
   const [formData, setFormData] = useState({
-    companyName: "",
-    logoUrl: "",
-    title: "",
-    description: "",
-    skills: "",
+    companyName: "" || state?.data?.companyName,
+    logoUrl: "" || state?.data?.logoUrl, 
+    title: "" || state?.data?.title,
+    description: "" || state?.data?.description,
+    skills: "" ,
   });
 
   const handleChange = (event) => {
@@ -19,10 +20,19 @@ function JobPostForm() {
   };
 
   const handleSubmit = async (event) => {
+    if(isEditExistingJobPost){
+      await updateJobPost(state?.id,{
+        ...formData,
+        skills: formData.skills.split(","),
+    
+      });
+    }else{
     await createJobPost({
       ...formData,
       skills: formData.skills.split(","),
     });
+  }
+  
   };
 
   useEffect(() => {
@@ -30,6 +40,7 @@ function JobPostForm() {
   }, [formData]);
   return (
     <div className={styles.container}>
+      <div><Toaster position="top-right" resolveOrder="false"/></div>
       <h1 className={styles.h1}>
         {isEditExistingJobPost ? <>Edit</> : <>Add</>} Job Description
       </h1>
